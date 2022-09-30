@@ -15,24 +15,18 @@ window.addEventListener("load", function() {
     
     let form = document.querySelector("form");
     form.addEventListener("submit", function(event) {
-        checkEmptyValues(event);
-        let pilotInput = document.querySelector("input[name=pilotName]");
-        let copilotInput = document.querySelector("input[name=copilotName]");
-        let fuelInput = document.querySelector("input[name=fuelLevel]");
-        let cargoInput = document.querySelector("input[name=cargoMass]");
+        let hasEmptyField = checkEmptyValues(event);
+        if(hasEmptyField === false) {
+            let pilotInput = document.querySelector("input[name=pilotName]");
+            let copilotInput = document.querySelector("input[name=copilotName]");
+            let fuelInput = document.querySelector("input[name=fuelLevel]");
+            let cargoInput = document.querySelector("input[name=cargoMass]");
+            let faultyItemsList = document.getElementById("faultyItems");
+            formSubmission(event, window.document, faultyItemsList, pilotInput, copilotInput, fuelInput, cargoInput);
 
-        formSubmission(window.document, "list", pilotInput, copilotInput, fuelInput, cargoInput);
-        // pilotInpResult = validateInput(pilotInput.value);
-        // copilotInpResult = validateInput(copilotInput.value);
-        // fuelInpResult = validateInput(fuelInput.value);
-        // cargoInpResult = validateInput(cargoInput.value);
-
-        // console.log(pilotInpResult);
-        // console.log(copilotInpResult);
-        // console.log(fuelInpResult);
-        // console.log(cargoInpResult);
-        
-        event.preventDefault();
+        } else {
+            event.preventDefault();
+        }
    })
 });
 
@@ -43,8 +37,8 @@ function checkEmptyValues(event) {
     for(let value of values) {
      if(value === "") {
          alert("All input fields are required")
-         event.preventDefault();
-         break;
+         return true;
      }
     }
+    return false;
    }

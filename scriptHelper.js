@@ -33,7 +33,8 @@ function isFuelLevelAcceptable(flValue, flStatus) {
         flStatus.style.visibility = "visible";
         return false;
     } else {
-        flStatus.style.visibility = "hidden";
+        flStatus.innerHTML = "Fuel level high enough for launch"
+        flStatus.style.visibility = "visible";
         return true;
     }
 }
@@ -44,7 +45,8 @@ function isCargoMassAcceptable(cmValue, cmStatus) {
         cmStatus.style.visibility = "visible";
         return false;
     } else {
-        cmStatus.style.visibility = "hidden";
+        cmStatus.innerHTML = "Cargo mass low enough for launch";
+        cmStatus.style.visibility = "visible";
         return true;
     }
 }
@@ -52,6 +54,10 @@ function isCargoMassAcceptable(cmValue, cmStatus) {
 function setNotReadyForLaunch(header) {
     header.innerHTML = "Shuttle not ready for launch";
     header.style.color = "red";
+}
+function setReadyForLaunch(header) {
+    header.innerHTML = "Shuttle is ready for launch."
+    header.style.color = "green";
 }
 
 function formSubmission(event, document, list, pilot, copilot, fuelLevel, cargoMass) {
@@ -69,49 +75,54 @@ function formSubmission(event, document, list, pilot, copilot, fuelLevel, cargoM
     let infoHeader = document.getElementById("launchStatus");
     let isFuelGud = isFuelLevelAcceptable(fuelLevel.value, fuelLevelStatus);
     let isCargoGud = isCargoMassAcceptable(cargoMass.value, cargoMassStatus);
+    let allReady = [];
     //more validation
     if(pilotInpResult !== "Not a Number") {
-        alert("Pilot must be a string.");
+        alert("Make sure to enter valid information for each field!");
         pilotStatus.style.visibility = "hidden";
-        event.preventDefault();
         setNotReadyForLaunch(infoHeader);
+        allReady.push(false)
     } else {
         pilotStatus.style.visibility = "visible";
+        allReady.push(true);
     }
 
     if(copilotInpResult !== "Not a Number") {
-        alert("Co-pilot must be a string.");
+        alert("Make sure to enter valid information for each field!");
         copilotStatus.style.visibility = "hidden";
-        event.preventDefault();
         setNotReadyForLaunch(infoHeader);
+        allReady.push(false);
     } else {
         copilotStatus.style.visibility = "visible";
+        allReady.push(true);
     }
 
     if(fuelInpResult !== "Is a Number") {
-        alert("Fuel level must be a number.");
+        alert("Make sure to enter valid information for each field!");
         setNotReadyForLaunch(infoHeader);
-        event.preventDefault();
+        allReady.push(false);
     }
     else if(isFuelGud === false) {
         setNotReadyForLaunch(infoHeader);
+        allReady.push(false);
     } else {
-        fuelLevelStatus.style.visibility = "visible";
-    }
-    
-    if(cargoInpResult !== "Is a Number") {
-        alert("Cargo level must be a number.");
-        setNotReadyForLaunch(infoHeader);
-        event.preventDefault();
-    } else if(isCargoGud === false) {
-        setNotReadyForLaunch(infoHeader);
-    } else {
-        cargoMassStatus.style.visibility = "visible"
+        allReady.push(true);
     }
 
-    infoHeader.innerHTML = "Shuttle is ready for launch."
-    infoHeader.style.color = "green";
- 
+    if(cargoInpResult !== "Is a Number") {
+        alert("Make sure to enter valid information for each field!");
+        setNotReadyForLaunch(infoHeader);
+        allReady.push(false);
+    } else if(isCargoGud === false) {
+        setNotReadyForLaunch(infoHeader);
+        allReady.push(false);
+    } else {
+        allReady.push(true);
+    }
+
+    if(!allReady.some((element) => element === false)) {
+        setReadyForLaunch(infoHeader);
+    }
 
     event.preventDefault();
         
@@ -136,3 +147,4 @@ module.exports.validateInput = validateInput;
 module.exports.formSubmission = formSubmission;
 module.exports.pickPlanet = pickPlanet; 
 module.exports.myFetch = myFetch;
+module.exports.setNotReadyForLaunch = setNotReadyForLaunch;

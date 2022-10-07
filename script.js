@@ -31,6 +31,7 @@ window.addEventListener("load", function() {
             formSubmission(event, window.document, faultyItemsList, pilotInput, copilotInput, fuelInput, cargoInput);
 
         } else {
+            setNotReadyForLaunch(document.getElementById("launchStatus"))
             event.preventDefault();
         }
    })
